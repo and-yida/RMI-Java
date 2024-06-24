@@ -1,0 +1,9 @@
+javac -cp ./classes/compute.jar client/ComputeCalculadora.java client/Operacoes.java
+
+set CLASSPATH=C:\Users\andressa.yida_unesp\Documents\CDP\Aula04\02\computeEngine
+
+
+java engine.ComputeEngine localhost 1099
+
+
+java client.ComputeCalculadora localhost 1099 * 2 3
