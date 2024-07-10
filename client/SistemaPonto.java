@@ -49,13 +49,13 @@ import java.util.logging.Logger;
 
 public class SistemaPonto implements Task<String>, Serializable {
 
-    private final String registro = "registro.csv";
-    private final int id;
+    private final String registro = "C:/ServerStorage/registro.csv";
+    private final String id;
     
     /**
      * Construção da tarefa
      */
-    public SistemaPonto(int id) {
+    public SistemaPonto(String id) {
         this.id = id;
     }
 
@@ -74,8 +74,10 @@ public class SistemaPonto implements Task<String>, Serializable {
     /**
      *
      */
-    public static String Registrar(int funcionario, String registro) throws IOException{
+    public static String Registrar(String funcionario, String registro) throws IOException{
         try{
+
+            // abre o arquivo de registro no servidor
             File arquivo = new File(registro);
 
             String linhas;
@@ -90,20 +92,22 @@ public class SistemaPonto implements Task<String>, Serializable {
             // percorre linha por linha do arquivo e coloca cada campo do CSV (separado por ",") em uma posição do vetor campos_tabela
             while(leitor.hasNext()){
                 linhas = leitor.nextLine();
-                campos_tabela = linhas.split(",");
+                campos_tabela = linhas.split(";");
             }
+            leitor.close();
 
-            // procura pelo último registro do referido funcionário e obtém o campo seguinte: se o último registro foi de entrada ou saída
-            for(int i=campos_tabela.length-1; i<campos_tabela.length; i--){
-                if(campos_tabela[i].equals(String.valueOf(funcionario))){
-                    ultimo_registro = campos_tabela[i++];
+            // procura pelo último registro do referido funcionário e obtém o campo seguinte que responde: se o último registro foi de entrada ou saída
+            for(int i=campos_tabela.length-1; i>=0; i--){
+                if(campos_tabela[i].equals(funcionario)){
+                    ultimo_registro = campos_tabela[i+1];
+                    break;
                 }
             }
 
             // se o último registro foi entrada, agora é saída
             if(ultimo_registro.equals("entrada")){
                 FileWriter escritor = new FileWriter(registro, true);
-                escritor.write(funcionario + ";" + "saida" + horario_formatado + "\n");
+                escritor.write(funcionario + ";" + "saida" + ";" + horario_formatado + "\n");
                 escritor.flush();
                 escritor.close();
                 
@@ -114,7 +118,7 @@ public class SistemaPonto implements Task<String>, Serializable {
             // se o último registro foi saída, agora é entrada
             else if(ultimo_registro.equals("saida")){
                 FileWriter escritor = new FileWriter(registro, true);
-                escritor.write(funcionario + ";" + "entrada" + horario_formatado + "\n");
+                escritor.write(funcionario + ";" + "entrada" + ";" + horario_formatado + "\n");
                 escritor.flush();
                 escritor.close();
                 
@@ -125,7 +129,7 @@ public class SistemaPonto implements Task<String>, Serializable {
             // caso seja o primeiro registro do funcionario, é uma entrada
             else{
                 FileWriter escritor = new FileWriter(registro, true);
-                escritor.write(funcionario + ";" + "entrada" + horario_formatado + "\n");      
+                escritor.write(funcionario + ";" + "entrada" + ";" + horario_formatado + "\n");      
                 escritor.flush();
                 escritor.close();
                 resposta = "Entrada registrada.";

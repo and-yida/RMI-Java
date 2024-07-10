@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 public class CompartilhamentoArquivo implements Task<byte[]>, Serializable {
 
     private final byte[] arquivo;
-    private final String nomediretorio_servidor = "<C:/ServerStorage";
     private final String operacao;
     private final String cliente;
     private final String servidor;
@@ -56,8 +55,6 @@ public class CompartilhamentoArquivo implements Task<byte[]>, Serializable {
         this.cliente = cliente;
         this.servidor = servidor;
         this.operacao = operacao;	
-        File diretorio_servidor = new File(nomediretorio_servidor);
-        diretorio_servidor.mkdir();
     }
 
     /**
@@ -85,9 +82,6 @@ public class CompartilhamentoArquivo implements Task<byte[]>, Serializable {
                 case "download":
                     resultado = download(servidor);
                     break;
-                // case "lista":
-                //     lista();
-                //     break;
                 default:
                     break;
             }
@@ -104,7 +98,7 @@ public class CompartilhamentoArquivo implements Task<byte[]>, Serializable {
             out.write(arquivo);
                 out.flush();
             out.close();
-	} catch (IOException e) {
+	    } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -115,21 +109,21 @@ public class CompartilhamentoArquivo implements Task<byte[]>, Serializable {
     }
 
     public static byte[] download(String servidor) throws IOException{
-	try {
+	    try {
             File arquivo_servidor = new File(servidor);			
             byte[] arquivobaixado = new byte[(int)arquivo_servidor.length()];
-            FileInputStream in;
-            in = new FileInputStream(arquivo_servidor);
+            FileInputStream in = new FileInputStream(arquivo_servidor);
             in.read(arquivobaixado, 0, arquivobaixado.length);
             in.close();
+
+            System.out.println("<< Arquivo do servidor obtido >>");
+            
             return arquivobaixado;  // retorna array de bytes contendo o arquivo do servidor
-	} catch (IOException e) {	
+	        } catch (IOException e) {	
             e.printStackTrace();
-	}		
+	    }		
 
-        System.out.println("<< Arquivo do servidor obtido >>");
-
-        return new byte[0];
+        return new byte[0];     // se não deu certo
     }
         
 }

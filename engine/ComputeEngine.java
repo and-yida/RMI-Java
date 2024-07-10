@@ -37,6 +37,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import compute.Compute;
 import compute.Task;
+import java.io.File;
 
 public class ComputeEngine implements Compute {
 
@@ -45,15 +46,29 @@ public class ComputeEngine implements Compute {
     }
 
     public <T> T executeTask(Task<T> t) {
+        System.out.println(" << Servidor executa a tarefa >> ");	
         return t.execute();
     }
 
     public static void main(String[] args) {
-        /*
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
+
+        try{
+            // Cria uma pasta no servidor
+            String nomediretorio_servidor = "C:/ServerStorage";
+            File diretorio_servidor = new File(nomediretorio_servidor);
+            diretorio_servidor.mkdir();
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        */
+
+        try{
+            String nomearquivo_registro = "C:/ServerStorage/registro.csv";
+            File arquivo_registro = new File(nomearquivo_registro);
+            arquivo_registro.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             String name = "Compute";
             Compute engine = new ComputeEngine();
@@ -61,9 +76,9 @@ public class ComputeEngine implements Compute {
                 (Compute) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.getRegistry(args[0],Integer.parseInt(args[1]));
             registry.rebind(name, stub);
-            System.out.println("ComputeEngine bound");
+            System.out.println("<< Servidor associa o nome de serviço a um objeto remoto (bind) >>");
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
+            System.err.println("<< ComputeEngine exception >>:");
             e.printStackTrace();
         }
     }

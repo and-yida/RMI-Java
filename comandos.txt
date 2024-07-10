@@ -1,9 +1,20 @@
-javac -cp ./classes/compute.jar client/ComputeCalculadora.java client/Operacoes.java
+javac -cp ./classes/compute.jar client/ComputeServicos.java client/CompartilhamentoArquivo.java client/SistemaPonto.java engine/ComputeEngine.java
 
-set CLASSPATH=C:\Users\andressa.yida_unesp\Documents\CDP\Aula04\02\computeEngine
+
+javac -cp ./classes/compute.jar client/ComputeServicos.java client/SistemaPonto.java
+
+
+"C:\Program Files\Java\jdk-22\bin\rmiregistry.exe"
+
 
 
 java engine.ComputeEngine localhost 1099
 
 
-java client.ComputeCalculadora localhost 1099 * 2 3
+java client.ComputeServicos localhost 1099 upload C:/Users/Yida/Documents/Outros/arquivo1.txt C:/ServerStorage/arquivo_cliente.txt
+
+
+java client.ComputeServicos localhost 1099 download C:/ServerStorage/baixe_aqui.txt C:/Users/Yida/Documents/Outros/arquivo_baixado.txt
+
+
+java client.ComputeServicos localhost 1099 ponto 0001
